@@ -14,5 +14,6 @@ router.get('/login', loggedInCheck, mainController.login_get);
 router.get('/addprodukt', loggedInCheck, adminAuth, mainController.addProdukt_get);
 router.get('/produkter', loggedInCheck, mainController.produkter_get);
 router.get('/logout', mainController.logout_get);
+router.get('/veileder', loggedInCheck, adminAuth, mainController.veileder_get);
 
 module.exports = router;

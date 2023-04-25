@@ -18,3 +18,7 @@ module.exports.produkter_get = (req, res) => {
 module.exports.logout_get = (req, res) => {
     res.render('logg-ut', { title: 'Logg ut' });
 };
+
+module.exports.veileder_get = (req, res) => {
+    res.render('veileder', { title: 'Veileder'});
+};

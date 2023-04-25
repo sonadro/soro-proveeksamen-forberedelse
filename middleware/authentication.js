@@ -35,10 +35,12 @@ const loggedInCheck = (req, res, next) => {
             if (err) {
                 // ugyldig token
                 console.error(err);
+                res.locals.isAdmin = false;
                 res.locals.loggedIn = false;
                 next();
             } else {
                 // logget inn
+                res.locals.isAdmin = true;
                 res.locals.loggedIn = true;
                 next();
             };
@@ -48,16 +50,19 @@ const loggedInCheck = (req, res, next) => {
             if (err) {
                 // ugyldig token
                 console.error(err);
+                res.locals.isAdmin = false;
                 res.locals.loggedIn = false;
                 next();
             } else {
                 // logget inn
+                res.locals.isAdmin = false;
                 res.locals.loggedIn = true;
                 next();
             };
         });
     } else {
         // brukeren er ikke logget inn
+        res.locals.isAdmin = false;
         res.locals.loggedIn = false;
         next();
     };
