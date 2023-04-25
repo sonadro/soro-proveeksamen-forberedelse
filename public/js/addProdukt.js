@@ -2,7 +2,7 @@
 const form = document.querySelector('.produktForm');
 
 const uploadProdukt = async function(dokument) {
-    const res = await fetch('http://localhost/lag_produkt', {
+    const res = await fetch('http://localhost/lag-produkt', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

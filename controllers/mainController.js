@@ -8,5 +8,9 @@ module.exports.login_get = (req, res) => {
 };
 
 module.exports.addProdukt_get = (req, res) => {
-    res.render('addProdukt', { title: 'Legg til produkt' })
+    res.render('addProdukt', { title: 'Legg til produkt' });
+};
+
+module.exports.produkter_get = (req, res) => {
+    res.render('produkter', { title: 'Produkter'});
 };

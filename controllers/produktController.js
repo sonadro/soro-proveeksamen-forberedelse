@@ -21,4 +21,30 @@ module.exports.lag_produkt = (req, res) => {
             err
         });
     };
-}
+};
+
+module.exports.get_produkter = async (req, res) => {
+    const data = req.body;
+
+    console.log(data);
+
+    // finn produkter
+    try {
+        const nyesteProdukter = await product.aggregate([
+            {
+              '$sort': {
+                'dato': -1
+              }
+            }, {
+              '$limit': 10
+            }
+        ]);
+
+        res.status(200).send({
+            status: 'Ok',
+            produkter: nyesteProdukter
+        });
+    } catch(err) {
+        console.error(err);
+    };
+};

@@ -12,5 +12,6 @@ const { adminAuth } = require('../middleware/authentication');
 router.get('/', mainController.home_get);
 router.get('/login', mainController.login_get);
 router.get('/addprodukt', adminAuth, mainController.addProdukt_get);
+router.get('/produkter', mainController.produkter_get);
 
 module.exports = router;
