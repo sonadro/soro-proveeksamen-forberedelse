@@ -24,10 +24,6 @@ module.exports.lag_produkt = (req, res) => {
 };
 
 module.exports.get_produkter = async (req, res) => {
-    const data = req.body;
-
-    console.log(data);
-
     // finn produkter
     try {
         const nyesteProdukter = await product.aggregate([

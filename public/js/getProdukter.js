@@ -7,14 +7,13 @@ const getProdukter = async function() {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            parcel: 'Gi meg produkter'
+            parcel: 'Produkter'
         })
     });
 
     const result = await(res.json());
 
     result.produkter.forEach(produkt => {
-        console.log(produkt);
         const htmlTemplate = `
             <div class="produkt">
                 <h3>${produkt.tittel}</h1>

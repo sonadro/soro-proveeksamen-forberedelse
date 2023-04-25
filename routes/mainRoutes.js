@@ -6,12 +6,13 @@ const mainController = require('../controllers/mainController');
 const router = Router();
 
 // middleware
-const { adminAuth } = require('../middleware/authentication');
+const { adminAuth, loggedInCheck } = require('../middleware/authentication');
 
 // routes
-router.get('/', mainController.home_get);
-router.get('/login', mainController.login_get);
-router.get('/addprodukt', adminAuth, mainController.addProdukt_get);
-router.get('/produkter', mainController.produkter_get);
+router.get('/', loggedInCheck, mainController.home_get);
+router.get('/login', loggedInCheck, mainController.login_get);
+router.get('/addprodukt', loggedInCheck, adminAuth, mainController.addProdukt_get);
+router.get('/produkter', loggedInCheck, mainController.produkter_get);
+router.get('/logout', mainController.logout_get);
 
 module.exports = router;

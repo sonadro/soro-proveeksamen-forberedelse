@@ -3,7 +3,7 @@ const loginForm = document.querySelector('.loginForm');
 
 // snakk med backend for å logge brukeren inn
 const loggInn = async function(bruker) {
-    const res = await fetch('http://localhost/user-login', {
+    await fetch('http://localhost/user-login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -12,10 +12,8 @@ const loggInn = async function(bruker) {
             parcel: bruker
         })
     });
-    
-    const result = await(res.json());
-    
-    console.log(result);
+
+    window.location = 'http://localhost/';
 };
 
 // on user submit

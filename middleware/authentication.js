@@ -16,7 +16,6 @@ const adminAuth = (req, res, next) => {
                 console.log(err);
                 res.redirect('/login');
             } else {
-                console.log(decodedToken);
                 next();
             };
         });
@@ -25,5 +24,44 @@ const adminAuth = (req, res, next) => {
     }
 };
 
+// sjekk om brukeren er logget inn
+const loggedInCheck = (req, res, next) => {
+    const adminToken = req.cookies.adminJWT;
+    const kundeToken = req.cookies.kundeJWT;
+
+    // sjekk om jwt er gyldig
+    if (adminToken) {
+        jwt.verify(adminToken, jwtAdminSecret, (err, decodedToken) => {
+            if (err) {
+                // ugyldig token
+                console.error(err);
+                res.locals.loggedIn = false;
+                next();
+            } else {
+                // logget inn
+                res.locals.loggedIn = true;
+                next();
+            };
+        });
+    } else if (kundeToken) {
+        jwt.verify(kundeToken, jwtSecret, (err, decodedToken) => {
+            if (err) {
+                // ugyldig token
+                console.error(err);
+                res.locals.loggedIn = false;
+                next();
+            } else {
+                // logget inn
+                res.locals.loggedIn = true;
+                next();
+            };
+        });
+    } else {
+        // brukeren er ikke logget inn
+        res.locals.loggedIn = false;
+        next();
+    };
+};
+
 // export functions
-module.exports = { adminAuth };
+module.exports = { adminAuth, loggedInCheck };

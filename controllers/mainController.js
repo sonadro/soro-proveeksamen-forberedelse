@@ -12,5 +12,9 @@ module.exports.addProdukt_get = (req, res) => {
 };
 
 module.exports.produkter_get = (req, res) => {
-    res.render('produkter', { title: 'Produkter'});
+    res.render('produkter', { title: 'Produkter' });
+};
+
+module.exports.logout_get = (req, res) => {
+    res.render('logg-ut', { title: 'Logg ut' });
 };
