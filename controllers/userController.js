@@ -1,105 +1,81 @@
 // packages
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
 
-const { userModel } = require('../models/user');
+// models
+const { user } = require('../models/user');
 
-// controller
-module.exports.user_create = (req, res) => {
-    const data = req.body;
-
-    const document = new userModel(data.parcel);
-    
-    // save document
-    try {
-        document.save();
-        res.status(200).send({
-            status: 'Document has been uploaded'
+// create jwt
+const { jwtSecret, jwtAdminSecret } = require('../config.json');
+const maxAge = 60 * 60 * 24 * 3;
+const createToken = (id, isAdmin) => {
+    if (isAdmin) {
+        return jwt.sign({ id }, jwtAdminSecret, {
+            expiresIn: maxAge
         });
-    } catch (err) {
-        console.error(err);
-        res.status(400).send({
-            status: `error: ${err}`
-        });
-    };
-};
-
-module.exports.user_readOne = async (req, res) => {
-    const data = req.body;
-    
-    const docId = data.id;
-
-    try {
-        const document = await userModel.findOne({ _id: docId });
-        res.status(200).send({
-            status: 'Document has been read',
-            document
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(400).send({
-            status: `error: ${err}`
-        });
-    };
-};
-
-module.exports.user_updateOne = async (req, res) => {
-    const data = req.body;
-
-    console.log(data);
-
-    try {
-        const oldDoc = await userModel.findOne({ _id: data.id });
-        const update = data.document;
-        await oldDoc.updateOne(update);
-
-        const newDoc = await userModel.findOne({ _id: data.id});
-        res.status(200).send({
-            status: 'Dokument has been updated',
-            document: newDoc
-        });
-    } catch(err) {
-        console.error(err);
-        res.status(400).send({
-            status: `error: ${err}`
-        });
-    };
-};
-
-module.exports.user_deleteOne = async (req, res) => {
-    const data = req.body;
-
-    console.log(data);
-
-    try {
-        await userModel.findOneAndRemove({ _id: data.id });
-        console.log('Deleted document');
-        res.status(200).send({
-            status: 'Document has been deleted'
-        });
-    } catch(err) {
-        console.error(err);
-        res.status(400).send({
-            status: `error: ${err}`
+    } else {
+        return jwt.sign({ id }, jwtSecret, {
+            expiresIn: maxAge
         });
     }
-};
+}
 
-module.exports.user_readAll = async (req, res) => {
+// controller
+module.exports.user_login = async (req, res) => {
+    // dataen brukeren skrev (brukernavn, passord)
+    const data = req.body.parcel;
+
+    // fjern gamle cookies
+    res.clearCookie('kundeJWT');
+    res.clearCookie('adminJWT');
+
     try {
-        const allDocs = await userModel.find({ });
-        let allIds = [];
-        allDocs.forEach(doc => {
-            allIds.push(doc._id.toString());
-        });
+        // finn bruker med matchende brukernavn
+        const dbUser = await user.findOne({ brukernavn: data.brukernavn });
 
-        res.status(200).send({
-            status: 'fetched all ids',
-            allIds
-        });
+        // hvis bruker skriver riktig passord
+        if (dbUser.passord === data.passord) {
+            if (dbUser.brukertype === 'admin') {
+                console.log('admin login');
+                // hvis brukeren er admin, lag en admin-token:
+                const token = createToken(dbUser._id, true);
+
+                // sett jwt cookie:
+                res.cookie('adminJWT', token, {
+                    sameSite: true,
+                    httpOnly: true,
+                    maxAge: maxAge * 1000
+                });
+
+                // send til frontend:
+                res.status(200).send({
+                    status: 'Logget inn som admin'
+                });
+            } else {
+                console.log('kunde login');
+                // hvis brukeren ikke er admin, lag en kunde-jwt:
+                const token = createToken(dbUser._id, false);
+
+                // sett jwt cookie:
+                res.cookie('kundeJWT', token, {
+                    sameSite: true,
+                    httpOnly: true,
+                    maxAge: maxAge * 1000
+                });
+
+                // send til frontend:
+                res.status(200).send({
+                    status: 'Logget inn som kunde'
+                });
+            };
+        } else {
+            throw 'Feil passord';
+        }
     } catch(err) {
         console.error(err);
         res.status(400).send({
-            status: `error: ${err}`
+            status: 'Kunne ikke logge inn.',
+            err
         });
     };
 };

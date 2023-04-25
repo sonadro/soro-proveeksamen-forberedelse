@@ -3,10 +3,11 @@ const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
     brukernavn: {
-        type: Number,
-        required: true
+        type: String,
+        required: true,
+        unique: true
     },
-    brukerType: {
+    brukertype: {
         type: String,
         required: true
     },

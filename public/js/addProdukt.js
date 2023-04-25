@@ -22,7 +22,7 @@ form.addEventListener('submit', e => {
 
     const produkt = {
         tittel: form.tittel.value,
-        dato: 'dato',
+        dato: Date.now(),
         modell: form.modell.value,
         merke: form.merke.value,
         pris: form.pris.value,
