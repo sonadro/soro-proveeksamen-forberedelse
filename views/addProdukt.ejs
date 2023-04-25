@@ -1,0 +1,29 @@
+<%- include('partials/header') %>
+
+    <div class="main">
+        <h1><%= title %></h1>
+    </div>
+
+    <form class="produktForm">
+        <label for="tittel">Tittel:</label>
+        <input type="text" name="tittel" id="tittel">
+        
+        <label for="modell">Modell:</label>
+        <input type="text" name="modell" id="modell">
+        
+        <label for="merke">Merke:</label>
+        <input type="text" name="merke" id="merke">
+        
+        <label for="pris">Pris:</label>
+        <input type="number" name="pris" id="pris">
+        
+        <label for="artikkelnummer">Artikkelnummer:</label>
+        <input type="text" name="artikkelnummer" id="artikkelnummer">
+
+        <button type="submit">Opprett produkt</button>
+    </form>
+
+    <!-- script -->
+    <script src="/js/addProdukt.js"></script>
+
+<%- include('partials/footer') %>
